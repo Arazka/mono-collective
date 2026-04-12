@@ -25,7 +25,7 @@ export default function CategoryPage({ category, products }) {
                         </ProductLayout>
                     ) : (
                         <span className="h-[15rem] text-center flex flex-col justify-center items-center text-sm tracking-wide capitalize text-gray-400">
-                            Products not found
+                            products not found
                         </span>
                     )}
                 </div>

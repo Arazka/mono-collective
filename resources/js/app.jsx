@@ -7,7 +7,7 @@ import { createRoot } from "react-dom/client";
 import AppProvider from "./Context/AppProvider";
 import { Toaster } from "react-hot-toast";
 
-const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+const appName = import.meta.env.VITE_APP_NAME || "Mono Collective";
 
 createInertiaApp({
     // title: (title) => `${title} - ${appName}`,
@@ -15,7 +15,7 @@ createInertiaApp({
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.jsx`,
-            import.meta.glob("./Pages/**/*.jsx")
+            import.meta.glob("./Pages/**/*.jsx"),
         ),
     setup({ el, App, props }) {
         const root = createRoot(el);
@@ -24,7 +24,7 @@ createInertiaApp({
             <AppProvider>
                 <Toaster position="top-center" />
                 <App {...props} />
-            </AppProvider>
+            </AppProvider>,
         );
     },
     progress: {

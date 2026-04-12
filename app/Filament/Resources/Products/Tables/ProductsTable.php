@@ -15,43 +15,43 @@ use Filament\Tables\Table;
 
 class ProductsTable
 {
-    public static function configure(Table $table): Table
-    {
-        return $table
-            ->columns([
-                ImageColumn::make('thumbImage.image')->disk('public'),
-                TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('category.name')
-                    ->searchable(),
-                TextColumn::make('status')
-                    ->searchable(),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                TrashedFilter::make(),
-            ])
-            ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                ]),
-            ]);
-    }
+  public static function configure(Table $table): Table
+  {
+    return $table
+      ->columns([
+        ImageColumn::make('thumbImage.image')->disk('public'),
+        TextColumn::make('name')
+          ->searchable(),
+        TextColumn::make('category.name')
+          ->searchable(),
+        TextColumn::make('status')
+          ->searchable(),
+        TextColumn::make('deleted_at')
+          ->dateTime()
+          ->sortable()
+          ->toggleable(isToggledHiddenByDefault: true),
+        TextColumn::make('created_at')
+          ->dateTime()
+          ->sortable()
+          ->toggleable(isToggledHiddenByDefault: true),
+        TextColumn::make('updated_at')
+          ->dateTime()
+          ->sortable()
+          ->toggleable(isToggledHiddenByDefault: true),
+      ])
+      ->filters([
+        TrashedFilter::make(),
+      ])
+      ->recordActions([
+        ViewAction::make(),
+        EditAction::make(),
+      ])
+      ->toolbarActions([
+        BulkActionGroup::make([
+          DeleteBulkAction::make(),
+          ForceDeleteBulkAction::make(),
+          RestoreBulkAction::make(),
+        ]),
+      ]);
+  }
 }

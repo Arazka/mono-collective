@@ -20,7 +20,7 @@ export default function ProductDetailPage({ product }) {
     const { openCart } = useContext(CartContext);
 
     const isWishlist = myWishlist?.some(
-        (data) => data.product_id === product.id
+        (data) => data.product_id === product.id,
     );
 
     const handleAddToCart = () => {
@@ -41,7 +41,7 @@ export default function ProductDetailPage({ product }) {
                 },
                 showProgress: false,
                 preserveScroll: true,
-            }
+            },
         );
     };
 
@@ -59,7 +59,7 @@ export default function ProductDetailPage({ product }) {
                 onSuccess: () => {
                     setIsWishlistLoading(false);
                 },
-            }
+            },
         );
     };
 

@@ -29,7 +29,11 @@ export default function NavActions({
                 </span>
             </Link>
 
-            <Link className="hidden lg:flex">
+            <Link
+                href={`/account/wishlist`}
+                as="button"
+                className="hidden lg:flex"
+            >
                 <HeartIcon className="size-6 text-gray-900" />
             </Link>
             <div className="relative cursor-pointer" onClick={openCart}>

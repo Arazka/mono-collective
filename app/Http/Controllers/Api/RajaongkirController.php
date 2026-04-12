@@ -15,195 +15,197 @@ use Ramsey\Uuid\Type\Integer;
 
 class RajaongkirController extends Controller
 {
-    public function migration()
-    {
-        // provinces
-        // $provinces = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/province');
-        // return $provinces['data'];
+  public function migration()
+  {
+    // provinces
+    // $provinces = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/province');
+    // return $provinces['data'];
 
-        // cities
-        // $cities = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/city/34');
-        // return $cities['data'];
+    // cities
+    // $cities = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/city/34');
+    // return $cities['data'];
 
-        // disctrict
-        // $districts = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/district/2');
-        // return $districts['data'];
+    // disctrict
+    // $districts = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/district/2');
+    // return $districts['data'];
 
-        // subdisctrict
-        $subdistricts = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/sub-district/3829');
-        return $subdistricts['data'];
+    // subdisctrict
+    $subdistricts = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/sub-district/3829');
+    return $subdistricts['data'];
+  }
+
+  public function migrateProvinces()
+  {
+    $response = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/province');
+
+    foreach ($response['data'] as $data) {
+      $provinceID = Province::find($data['id']);
+
+      if (!$provinceID) {
+        Province::create([
+          'id' => $data['id'],
+          'name' => $data['name'],
+        ]);
+      }
     }
 
-    public function migrateProvinces()
-    {
-        $response = Http::withHeader('key', config('services.rajaongkir.key'))->get('https://rajaongkir.komerce.id/api/v1/destination/province');
+    return response()->json(['messagee' => 'Success migrate province data!']);
+  }
 
-        foreach ($response['data'] as $data) {
-            $provinceID = Province::find($data['id']);
+  public function migrateCities()
+  {
+    $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/city/12");
 
-            if (!$provinceID) {
-                Province::create([
-                    'id' => $data['id'],
-                    'name' => $data['name'],
-                ]);
-            }
-        }
+    foreach ($response['data'] as $data) {
+      $cityID = City::find($data['id']);
 
-        return response()->json(['messagee' => 'Success migrate province data!']);
+      if (!$cityID) {
+        City::create([
+          'id' => $data['id'],
+          'province_id' => 12,
+          'name' => $data['name'],
+        ]);
+      }
     }
 
-    public function migrateCities()
-    {
-        foreach (Province::all() as $province) {
-            $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/city/{$province->id}");
+    return response()->json(['messagee' => 'Success migrate cities data!']);
+  }
 
-            foreach ($response['data'] as $data) {
-                $cityID = City::find($data['id']);
+  public function migrateDistricts()
+  {
+    // foreach (City::all() as $city) {
+    //     $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/district/{$city->id}");
+    //     $body = $response->json();
 
-                if (!$cityID) {
-                    City::create([
-                        'id' => $data['id'],
-                        'province_id' => $province->id,
-                        'name' => $data['name'],
-                    ]);
-                }
-            }
-        }
+    //     foreach ($body['data'] as $data) {
+    //         $districtID = District::find($data['id']);
 
-        return response()->json(['messagee' => 'Success migrate cities data!']);
+    //         if (!$districtID) {
+    //             District::create([
+    //                 'id' => $data['id'],
+    //                 'city_id' => $city->id,
+    //                 'name' => $data['name'],
+    //             ]);
+    //         }
+    //     }
+    // }
+
+    // 261 = sleman
+    // 383 = magelang
+    $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/district/383");
+    $body = $response->json();
+
+    foreach ($body['data'] as $data) {
+      $districtID = District::find($data['id']);
+
+      if (!$districtID) {
+        District::create([
+          'id' => $data['id'],
+          'city_id' => 383,
+          'name' => $data['name'],
+        ]);
+      }
     }
 
-    public function migrateDistricts()
-    {
-        // foreach (City::all() as $city) {
-        //     $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/district/{$city->id}");
-        //     $body = $response->json();
+    return response()->json(['messagee' => 'Success migrate districts data!']);
+  }
 
-        //     foreach ($body['data'] as $data) {
-        //         $districtID = District::find($data['id']);
+  public function migrateSubdistricts()
+  {
+    // foreach (City::all() as $city) {
+    //     $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/district/{$city->id}");
+    //     $body = $response->json();
 
-        //         if (!$districtID) {
-        //             District::create([
-        //                 'id' => $data['id'],
-        //                 'city_id' => $city->id,
-        //                 'name' => $data['name'],
-        //             ]);
-        //         }
-        //     }
-        // }
+    //     foreach ($body['data'] as $data) {
+    //         $districtID = District::find($data['id']);
 
-        $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/district/259");
-        $body = $response->json();
+    //         if (!$districtID) {
+    //             District::create([
+    //                 'id' => $data['id'],
+    //                 'city_id' => $city->id,
+    //                 'name' => $data['name'],
+    //             ]);
+    //         }
+    //     }
+    // }
 
-        foreach ($body['data'] as $data) {
-            $districtID = District::find($data['id']);
+    // 3829 = muntilan
+    // 2612 = sleman
+    $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/sub-district/2612");
+    $body = $response->json();
 
-            if (!$districtID) {
-                District::create([
-                    'id' => $data['id'],
-                    'city_id' => 259,
-                    'name' => $data['name'],
-                ]);
-            }
-        }
+    foreach ($body['data'] as $data) {
+      $subdistrictID = Subdistrict::find($data['id']);
 
-        return response()->json(['messagee' => 'Success migrate districts data!']);
+      if (!$subdistrictID) {
+        Subdistrict::create([
+          'id' => $data['id'],
+          'district_id' => 2612,
+          'name' => $data['name'],
+          'zip_code' => $data['zip_code'],
+        ]);
+      }
     }
 
-    public function migrateSubdistricts()
-    {
-        // foreach (City::all() as $city) {
-        //     $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/district/{$city->id}");
-        //     $body = $response->json();
+    return response()->json(['messagee' => 'Success migrate subdistricts data!']);
+  }
 
-        //     foreach ($body['data'] as $data) {
-        //         $districtID = District::find($data['id']);
-
-        //         if (!$districtID) {
-        //             District::create([
-        //                 'id' => $data['id'],
-        //                 'city_id' => $city->id,
-        //                 'name' => $data['name'],
-        //             ]);
-        //         }
-        //     }
-        // }
-
-        $response = Http::withHeader('key', config('services.rajaongkir.key'))->get("https://rajaongkir.komerce.id/api/v1/destination/sub-district/2588");
-        $body = $response->json();
-
-        foreach ($body['data'] as $data) {
-            $subdistrictID = Subdistrict::find($data['id']);
-
-            if (!$subdistrictID) {
-                Subdistrict::create([
-                    'id' => $data['id'],
-                    'district_id' => 2588,
-                    'name' => $data['name'],
-                    'zip_code' => $data['zip_code'],
-                ]);
-            }
-        }
-
-        return response()->json(['messagee' => 'Success migrate subdistricts data!']);
+  public function province()
+  {
+    try {
+      $province = Province::all();
+      return $this->sendResponse($province, 'Provinces Retrieved Successfully!');
+    } catch (\Throwable $th) {
+      return $this->sendError('Internal server error', [], 500);
     }
+  }
 
-    public function province()
-    {
-        try {
-            $province = Province::all();
-            return $this->sendResponse($province, 'Provinces Retrieved Successfully!');
-        } catch (\Throwable $th) {
-            return $this->sendError('Internal server error', [], 500);
-        }
+  public function city($province_id)
+  {
+    try {
+      $cities = City::where('province_id', $province_id)->get();
+      return $this->sendResponse($cities, 'Cities Retrieved Successfully!');
+    } catch (\Throwable $th) {
+      return $this->sendError('Internal server error', [], 500);
     }
+  }
 
-    public function city($province_id)
-    {
-        try {
-            $cities = City::where('province_id', $province_id)->get();
-            return $this->sendResponse($cities, 'Cities Retrieved Successfully!');
-        } catch (\Throwable $th) {
-            return $this->sendError('Internal server error', [], 500);
-        }
+  public function district($city_id)
+  {
+    try {
+      $districts = District::where('city_id', $city_id)->get();
+      return $this->sendResponse($districts, 'District Retrieved Successfully!');
+    } catch (\Throwable $th) {
+      return $this->sendError('Internal server error', [], 500);
     }
+  }
 
-    public function district($city_id)
-    {
-        try {
-            $districts = District::where('city_id', $city_id)->get();
-            return $this->sendResponse($districts, 'District Retrieved Successfully!');
-        } catch (\Throwable $th) {
-            return $this->sendError('Internal server error', [], 500);
-        }
+  public function subdistrict($district_id)
+  {
+    try {
+      $subdistricts = Subdistrict::where('district_id', $district_id)->get();
+      return $this->sendResponse($subdistricts, 'District Retrieved Successfully!');
+    } catch (\Throwable $th) {
+      return $this->sendError('Internal server error', [], 500);
     }
+  }
 
-    public function subdistrict($district_id)
-    {
-        try {
-            $subdistricts = Subdistrict::where('district_id', $district_id)->get();
-            return $this->sendResponse($subdistricts, 'District Retrieved Successfully!');
-        } catch (\Throwable $th) {
-            return $this->sendError('Internal server error', [], 500);
-        }
-    }
+  public function calculateCost(Request $request)
+  {
+    // destination 3829
+    // $cartItems = Cart::with('variant')->where('user_id', Auth::user()->id)->get();
+    // $weight = $cartItems->sum(fn($cart) => $cart->quantity * $cart->variant->weight);
 
-    public function calculateCost(Request $request)
-    {
-        // destination 3829
-        // $cartItems = Cart::with('variant')->where('user_id', Auth::user()->id)->get();
-        // $weight = $cartItems->sum(fn($cart) => $cart->quantity * $cart->variant->weight);
+    $response = Http::withHeader('key', config('services.rajaongkir.key'))
+      ->asForm()
+      ->post("https://rajaongkir.komerce.id/api/v1/calculate/district/domestic-cost", [
+        'origin' => 1331,
+        'destination' => $request->destination,
+        'weight' => $request->weight,
+        'courier' => 'sicepat',
+        'price' => 'lowest'
+      ]);
 
-        $response = Http::withHeader('key', config('services.rajaongkir.key'))
-            ->asForm()
-            ->post("https://rajaongkir.komerce.id/api/v1/calculate/district/domestic-cost", [
-                'origin' => 1331,
-                'destination' => $request->destination,
-                'weight' => $request->weight,
-                'courier' => 'sicepat',
-                'price' => 'lowest'
-            ]);
-
-        return $response;
-    }
+    return $response;
+  }
 }
