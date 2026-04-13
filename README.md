@@ -4,6 +4,10 @@ Mono Collective adalah aplikasi e-commerce single vendor berbasis web yang di le
 
 ## Preview Aplikasi
 
+### Disclaimer
+
+Gambar produk yang digunakan dalam project ini hanya untuk keperluan demo dan bukan milik saya.
+
 ![HomePage](docs/Home-1.png)
 ![HomePage](docs/Home-2.png)
 ![CheckoutPage](docs/Checkout-1.png)
