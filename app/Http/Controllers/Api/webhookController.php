@@ -60,7 +60,7 @@ class webhookController extends Controller
         'paid_at' => $settlement_time
       ]);
     } elseif ($transaction_status == 'pending') {
-      $order->update(['status' => OrderStatus::PENDING_PAYEMNT]);
+      $order->update(['status' => OrderStatus::PENDING_PAYMENT]);
       $invoice->update(['status' => InvoiceStatus::UNPAID]);
     } elseif ($transaction_status == 'deny' || $transaction_status == 'cancel') {
       $order->update(['status' => OrderStatus::CANCELED]);
