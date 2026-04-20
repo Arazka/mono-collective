@@ -28,8 +28,8 @@ export default function VaNumberSection({ vaNumber }) {
                     className={`hidden sm:flex`}
                 />
             </div>
-            <div>
-                <div className="text-xl font-mono font-bold text-indigo-700 tracking-wider">
+            <div className="">
+                <div className="text-xl font-bold text-indigo-700 break-words">
                     {vaNumber}
                 </div>
                 <CopyButton

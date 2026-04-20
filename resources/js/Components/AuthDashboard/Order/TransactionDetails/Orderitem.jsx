@@ -4,14 +4,14 @@ export default function Orderitem({ item }) {
     // console.log(item);
     return (
         <div className="flex flex-row items-start space-x-4">
-            <div className="">
+            <div className="flex-none">
                 <img
                     src={`/storage/${item?.product?.thumb_image?.image}`}
                     alt=""
-                    className="object-cover w-[10rem] rounded-xl"
+                    className="object-cover w-[8rem] sm:w-[10rem] rounded-xl"
                 />
             </div>
-            <div className="">
+            <div className="flex-1">
                 <div className="flex flex-col items-start justify-between space-y-3 w-full">
                     <p className="text-base text-dark-green font-medium">
                         {item?.product_name}
