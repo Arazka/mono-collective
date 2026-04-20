@@ -35,7 +35,7 @@ export default function Checkout({ carts, addresses, subtotal, weight }) {
                         {
                             weight: weight,
                             destination: selectedAddress?.shipping_district_id,
-                        }
+                        },
                     );
                     setShippingMethods(res.data.data);
                     setIsLoadingShippingMethods(false);
@@ -72,7 +72,7 @@ export default function Checkout({ carts, addresses, subtotal, weight }) {
                 onFinish: () => {
                     setIsLoading(false);
                 },
-            }
+            },
         );
     };
 

@@ -15,14 +15,14 @@ class webhookController extends Controller
 {
   public function webhookNotification(Request $request)
   {
-    $order_id = $request->order_id;
-    $status_code = $request->status_code;
-    $gross_amount = $request->gross_amount;
-    $signature_key = $request->signature_key;
+    $order_id           = $request->order_id;
+    $status_code        = $request->status_code;
+    $gross_amount       = $request->gross_amount;
+    $signature_key      = $request->signature_key;
     $transaction_status = $request->transaction_status;
-    $settlement_time = $request->settlement_time;
+    $settlement_time    = $request->settlement_time;
 
-    $server_key = config('services.midtrans.server_key');
+    $server_key     = config('services.midtrans.server_key');
     $mySignatureKey = hash('sha512', $order_id . $status_code . $gross_amount . $server_key);
 
     // validate signature key
@@ -56,7 +56,7 @@ class webhookController extends Controller
     if ($transaction_status == 'settlement') {
       $order->update(['status' => OrderStatus::PROCESSING]);
       $invoice->update([
-        'status' => InvoiceStatus::PAID,
+        'status'  => InvoiceStatus::PAID,
         'paid_at' => $settlement_time
       ]);
     } elseif ($transaction_status == 'pending') {
