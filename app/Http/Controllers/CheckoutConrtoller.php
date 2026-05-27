@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 
 class CheckoutConrtoller extends Controller
 {
-  protected $midtransService;
+  protected MidtransService $midtransService;
 
   public function __construct(MidtransService $midtransService)
   {
@@ -88,7 +88,7 @@ class CheckoutConrtoller extends Controller
     }
 
     try {
-      $orderData = DB::transaction(function () use ($shippingAddress, $shippingMethodDetail) {
+      $orderData = DB::transaction(function () use ($shippingAddress, $shippingMethodDetail, $request) {
         $cartItems = Cart::where('user_id', Auth::id())
           ->lockForUpdate()
           ->with([
@@ -112,7 +112,7 @@ class CheckoutConrtoller extends Controller
         $tax        = $subtotal * 0.12;
         $grandTotal = $subtotal + $tax + $shippingMethodDetail['cost'];
 
-        $order = Auth::user()->orders()->create([
+        $order = $request->user()->orders()->create([
           'order_date'              => now(),
           'status'                  => OrderStatus::PENDING_PAYMENT,
           'shipping_method_detail'  => json_encode($shippingMethodDetail),
